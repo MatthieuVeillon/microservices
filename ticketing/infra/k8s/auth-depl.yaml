@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+## refers to the deployment name
+metadata:
+  name: auth-depl
+spec:
+  replicas: 1
+  ## first step to find the pods that the deployments create
+  selector:
+    matchLabels:
+      app: auth
+  ## second step to tell how to create the pod - should match the selector above
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      containers:
+        - name: auth
+          image: mveillon/auth
+---
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: auth-srv
+  spec:
+    selector:
+      app: auth
+    ports:
+      - name: auth
+        protocol: TCP
+        port: 3000
+        targetPort: 3000
